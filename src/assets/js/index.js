@@ -152,4 +152,48 @@ function closeVideoModal() {
     $('.modal_view').css('display','none');
 }
 
-$('.close').onclick(closeVideoModal);
+$('.close').click(closeVideoModal);
+
+window.addEventListener('online', handleConnection);
+window.addEventListener('offline', handleConnection);
+
+function handleConnection() {
+  if (navigator.onLine) {
+    isReachable(getServerUrl()).then(function(online) {
+      if (online) {
+        // handle online status
+        console.log('online');
+        $(".tool-bar").css("background-color", "dodgerblue");
+      } else {
+        console.log('no connectivity');
+        $(".tool-bar").css("background-color", "yellow");
+      }
+    });
+  } else {
+    // handle offline status
+    console.log('offline');
+    $(".tool-bar").css("background-color", "red");
+  }
+}
+
+function isReachable(url) {
+  /**
+   * Note: fetch() still "succeeds" for 404s on subdirectories,
+   * which is ok when only testing for domain reachability.
+   *
+   * Example:
+   *   https://google.com/noexist does not throw
+   *   https://noexist.com/noexist does throw
+   */
+  return fetch(url, { method: 'HEAD', mode: 'no-cors' })
+    .then(function(resp) {
+      return resp && (resp.ok || resp.type === 'opaque');
+    })
+    .catch(function(err) {
+      console.warn('[conn test failure]:', err);
+    });
+}
+
+function getServerUrl() {
+  return window.location.origin;
+}
