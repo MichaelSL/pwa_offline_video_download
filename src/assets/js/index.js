@@ -36,16 +36,20 @@ var app = {
         await db.init();
         await this.loadVideoList()
     },
-    loadVideoList() {
+    loadVideoList(filter) {
         console.log('load list')
         var videoListUl = $('#videoList');
         videoListUl.empty()
-        for (var i = 0; i < videoList.length; i++) {
-            var item = '<li id="li_' + videoList[i].id + '"></li>'
-            videoListUl.append(item)
-            this.getDownloadTool(videoList[i])
+        var list = videoList;
+        if (filter){
+            list = list.filter(x => x.title.startsWith(filter));
         }
 
+        list.forEach(element => {
+            var item = '<li id="li_' + element.id + '"></li>'
+            videoListUl.append(item)
+            this.getDownloadTool(element)
+        });
     },
     async getDownloadTool(item) {
         await db.init();
@@ -54,7 +58,7 @@ var app = {
             if (db.allDocs[i].id == 'video_' + item.id) {
                 var res = '<button class="downloaded" onclick="app.playVideo('+item.id+')">' +
                     '<img src="assets/media/icon-play.png">' +
-                    '<span> See Video ' + item.title + '</span>' +
+                    '<span> See Video "' + item.title + '"</span>' +
                     '</button>' +
                     '<div class="progress-bar" id="pb_' + item.id + '"><div></div></div>';
                 $('#li_' + item.id).html('')
@@ -197,3 +201,7 @@ function isReachable(url) {
 function getServerUrl() {
   return window.location.origin;
 }
+
+document.getElementById("srch").addEventListener("change",function () {
+    app.loadVideoList(document.getElementById("srch").value);
+});
