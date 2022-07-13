@@ -5,28 +5,28 @@ $(document).ready(function () {
 var videoList = [
     {
         id: 1,
-        title: "step one",
-        src: "video/v2.mp4"
+        title: "Carving",
+        src: "video/v1.mp4"
     },
     {
         id: 2,
-        title: "step two",
+        title: "Rabbit",
         src: "video/v2.mp4"
     },
     {
         id: 3,
-        title: "step three",
-        src: "video/v2.mp4"
+        title: "Hazelnut",
+        src: "video/v3.mp4"
     },
     {
         id: 4,
-        title: "step four",
-        src: "video/v2.mp4"
+        title: "Wave",
+        src: "video/v4.mp4"
     },
     {
         id: 5,
-        title: "step five",
-        src: "video/v2.mp4"
+        title: "City",
+        src: "video/v5.mp4"
     }
 ]
 
@@ -92,14 +92,14 @@ var app = {
                 //Upload progress
                 xhr.addEventListener('progress', function (e) {
                     if (e.lengthComputable) {
-                        console.log((100 * e.loaded / e.total))
+                        console.log(video.id + ' >>> ' + (100 * e.loaded / e.total))
                         $('#pb_' + video.id + ' > div').css('width', '' + (100 * e.loaded / e.total) + '%');
                     }
                 });
                 return xhr;
             },
             success: function (data) {
-
+                console.log('download success');
                 var videoRow = {
                     "_id": 'video_' + video.id,
                     "title": video.title,
@@ -110,8 +110,9 @@ var app = {
                         }
                     }
                 };
+                console.log('writing video to db');
                 db.db.put(videoRow).then(function (result) {
-                    //alert('video success download , can watch in download list')
+                    console.log('video success download , can watch in download list')
                     self.getDownloadTool(video)
                 }).catch(function (err) {
                     console.log(err);
@@ -145,3 +146,10 @@ var db = {
         })
     },
 }
+
+function closeVideoModal() {
+    $('#preview_video').trigger('pause');
+    $('.modal_view').css('display','none');
+}
+
+$('.close').onclick(closeVideoModal);

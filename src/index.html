@@ -13,6 +13,7 @@
     <link rel=manifest href=manifest.json>
     <meta name=msapplication-TileColor content=#FE9901>
     <meta name=msapplication-TileImage content=static/icons/ms-icon-144x144.png>
+<script>navigator.serviceWorker.register("sw.js")</script> 
     <meta name=theme-color content=#1D1F45>
 </head>
 <body>
@@ -22,12 +23,12 @@
 </div>
 
 <div class="main">
-    <h1 style="font-size: 20px">curse web learning</h1>
+    <h1 style="font-size: 20px">course web learning</h1>
     <ul id="videoList"></ul>
 </div>
 
 <div class="modal_view">
-    <div class="close" onclick="$('.modal_view').css('display','none')">back to list</div>
+    <div style="z-index: 5000;" class="close">back to list</div>
     <video controls id="preview_video"></video>
 </div>
 
